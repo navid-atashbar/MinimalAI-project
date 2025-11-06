@@ -25,3 +25,30 @@ class StudentAI():
         move = moves[index][inner_index]
         self.board.make_move(move,self.color)
         return move
+        '''
+        def minimax_search(game, state):
+            player = game.to_move(state)
+            value, move = max_value(game,state)
+            return move
+        def max_value(game,state):
+            if game.is_terminal(state):
+                return game.utility(state, game.to_move(state)), None
+            v = float('-inf')
+            best_move = None
+            for a in game.actions(state):
+                v2, _ = min_value(game, game.result(state,a))
+                if v2 > v:
+                    v, best_move = v2, a
+            return v, best_move
+        def min_value(game, state):
+            if game.is_terminal(state):
+                return game.utility(state,game.to_move(state)), None
+            
+            v = float('inf')
+            best_move = None
+            for a in game.actions(state):
+                v2, _ = max_value(game,game.result(state,a))
+                if v2 < v:
+                    v, best_move = v2, a
+            return v, best_move
+                '''
