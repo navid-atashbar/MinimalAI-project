@@ -28,12 +28,11 @@ class StudentAI():
         return move
 
     def minimax_search(game, state):
-        player = game.to_move(state)
+        #player = game.to_move(state)
         value, move = max_value(game,state)
         return move
         
     def max_value(game,state):
-        player = game.to_move(state)
         result = game.is_win(state)
         if result != 0:
             if result == -1:
@@ -44,10 +43,21 @@ class StudentAI():
                 return -100, None
         v = float('-inf')
         best_move = None
-        for a in game.get_all_possible_moves(state):
-            v2, _ = min_value(game, game.result(state,a))
-            if v2 > v:
-                v, best_move = v2, a
+        if state == 1:
+            opponent = 2
+        else:
+            opponent = 1
+        all_moves = game.get_all_possible_moves(state)
+        for i in all_moves:
+            for j in i:
+                try:
+                    game.make_move(j,state)
+                    v2, _ = min_value(game, opponent)
+                    game.undo()
+                    if v2 > v:
+                        v, best_move = v2, j
+                except:
+                    continue
         return v, best_move
 
     def min_value(game, state):
@@ -62,8 +72,19 @@ class StudentAI():
                 return -100, None
         v = float('inf')
         best_move = None
-        for a in game.get_all_possible_moves(state):
-            v2, _ = max_value(game,game.result(state,a))
-            if v2 < v:
-                v, best_move = v2, a
+        if state == 1:
+            opponent = 2
+        else:
+            opponent = 1
+        all_moves = game.get_all_possible_moves(state)
+        for i in all_moves:
+            for j in i:
+                try:
+                    game.make_move(j,state)
+                    v2, _ = min_value(game, opponent)
+                    game.undo()
+                    if v2 > v:
+                        v, best_move = v2, j
+                except:
+                    continue
         return v, best_move
