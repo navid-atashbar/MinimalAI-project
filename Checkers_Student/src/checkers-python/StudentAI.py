@@ -15,6 +15,7 @@ class StudentAI():
         self.opponent = {1:2,2:1}
         self.color = 2
     def get_move(self,move):
+        #Change using min max algorithm
         if len(move) != 0:
             self.board.make_move(move,self.opponent[self.color])
         else:
@@ -26,60 +27,3 @@ class StudentAI():
         move = moves[index][inner_index]'''
         self.board.make_move(move,self.color)
         return move
-
-    def minimax_search(self, game, state):
-        #player = game.to_move(state)
-        value, move = self.max_value(game,state)
-        return move
-        
-    def max_value(self, game,state):
-        result = game.is_win(state)
-        if result != 0:
-            if result == -1 or result == state:
-                return 100, None
-            else:
-                return -100, None
-        v = float('-inf')
-        best_move = None
-        if state == 1:
-            opponent = 2
-        else:
-            opponent = 1
-        all_moves = game.get_all_possible_moves(state)
-        for i in all_moves:
-            for j in i:
-                try:
-                    game.make_move(j,state)
-                    v2, _ = self.min_value(game, opponent)
-                    game.undo()
-                    if v2 > v:
-                        v, best_move = v2, j
-                except:
-                    continue
-        return v, best_move
-
-    def min_value(self, game, state):
-        result = game.is_win(state)
-        if result != 0:
-            if result == -1 or result == state:
-                return 100, None
-            else:
-                return -100, None
-        v = float('inf')
-        best_move = None
-        if state == 1:
-            opponent = 2
-        else:
-            opponent = 1
-        all_moves = game.get_all_possible_moves(state)
-        for i in all_moves:
-            for j in i:
-                try:
-                    game.make_move(j,state)
-                    v2, _ = self.max_value(game, opponent)
-                    game.undo()
-                    if v2 < v:
-                        v, best_move = v2, j
-                except:
-                    continue
-        return v, best_move
