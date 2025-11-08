@@ -20,24 +20,22 @@ class StudentAI():
         else:
             self.color = 1
         moves = self.board.get_all_possible_moves(self.color)
-        move = minimax_search(self.board, self.color)
+        move = self.minimax_search(self.board, self.color)
         '''index = randint(0,len(moves)-1)
         inner_index =  randint(0,len(moves[index])-1)
         move = moves[index][inner_index]'''
         self.board.make_move(move,self.color)
         return move
 
-    def minimax_search(game, state):
+    def minimax_search(self, game, state):
         #player = game.to_move(state)
-        value, move = max_value(game,state)
+        value, move = self.max_value(game,state)
         return move
         
-    def max_value(game,state):
+    def max_value(self, game,state):
         result = game.is_win(state)
         if result != 0:
-            if result == -1:
-                return 0, None
-            elif result == player:
+            if result == -1 or result == state:
                 return 100, None
             else:
                 return -100, None
@@ -52,7 +50,7 @@ class StudentAI():
             for j in i:
                 try:
                     game.make_move(j,state)
-                    v2, _ = min_value(game, opponent)
+                    v2, _ = self.min_value(game, opponent)
                     game.undo()
                     if v2 > v:
                         v, best_move = v2, j
@@ -60,13 +58,10 @@ class StudentAI():
                     continue
         return v, best_move
 
-    def min_value(game, state):
-        player = game.to_move(state)
+    def min_value(self, game, state):
         result = game.is_win(state)
         if result != 0:
-            if result == -1:
-                return 0, None
-            elif result == player:
+            if result == -1 or result == state:
                 return 100, None
             else:
                 return -100, None
@@ -81,9 +76,9 @@ class StudentAI():
             for j in i:
                 try:
                     game.make_move(j,state)
-                    v2, _ = min_value(game, opponent)
+                    v2, _ = self.max_value(game, opponent)
                     game.undo()
-                    if v2 > v:
+                    if v2 < v:
                         v, best_move = v2, j
                 except:
                     continue
