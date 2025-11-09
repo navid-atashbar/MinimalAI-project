@@ -14,7 +14,7 @@ class StudentAI():
         self.color = ''
         self.opponent = {1:2,2:1}
         self.color = 2
-        self.max_depth_search = 5
+        self.max_depth_search = 3
         self.alpha = float('-inf')
         self.beta = float('inf')
     def get_move(self,move):
@@ -23,7 +23,11 @@ class StudentAI():
         else:
             self.color = 1
         moves = self.board.get_all_possible_moves(self.color)
-        legal_moves = [m for group in moves for m in group if m is not None]
+        legal_moves = []
+        for group in moves:
+            for m in group:
+                if m is not None:
+                    legal_moves.append(m)
         if not moves or all(len(m) == 0 for m in moves):
             return Move([])
         move = self.minimax_search(self.board, self.color, self.max_depth_search, self.alpha, self.beta)
@@ -128,17 +132,23 @@ class StudentAI():
         color_map = {1: "B", 2: "W"} 
         my_color = color_map[state]
         opp_color = color_map[self.opponent[state]]
+        center_row = range(2, len(board)-2)
+        center_col = range(2,len(board[0])-2)
         for i in range(len(board)):
             for j in range(len(board[i])):
                 piece = board[i][j]
                 if piece is None:
                     continue
                 if piece.color == my_color:
-                    score += 1
+                    score += 2
                     if piece.is_king:
-                        score += 1
+                        score += 2
+                    if i in center_row and j in center_col:
+                        score +=1
                 elif piece.color == opp_color:
-                    score -= 1
+                    score -= 2
                     if piece.is_king:
+                        score -= 2
+                    if i in center_row and j in center_col:
                         score -= 1
         return score
