@@ -47,7 +47,7 @@ class StudentAI():
 
     def minimax_search(self, game, state, depth, alpha, beta):
         #player = game.to_move(state)
-        value, move = self.max_value(game,state,depth, alpha, beta)
+        value, move = self.max_value(game,state, depth, alpha, beta)
         return move
         
     def max_value(self, game,state, depth, alpha, beta):
@@ -143,13 +143,13 @@ class StudentAI():
                 if piece.color == my_color:
                     score += 2
                     if piece.is_king:
-                        score += 2
+                        score += 4
                     if i in center_row and j in center_col:
                         score +=1
                 elif piece.color == opp_color:
                     score -= 2
                     if piece.is_king:
-                        score -= 2
+                        score -= 4
                     if i in center_row and j in center_col:
                         score -= 1
         return score
