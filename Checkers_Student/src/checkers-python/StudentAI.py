@@ -14,7 +14,7 @@ class StudentAI():
         self.color = ''
         self.opponent = {1:2,2:1}
         self.color = 2
-        self.max_depth_search = 3
+        self.max_depth_search = 5
         self.alpha = float('-inf')
         self.beta = float('inf')
     def get_move(self,move):
@@ -38,6 +38,7 @@ class StudentAI():
             self.board.make_move(move,self.color)
             return move
         else:
+            print("random move")
             index = randint(0, len(moves)-1)
             inner_index = randint(0, len(moves[index])-1)
             move = moves[index][inner_index]
