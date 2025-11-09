@@ -14,7 +14,7 @@ class StudentAI():
         self.color = ''
         self.opponent = {1:2,2:1}
         self.color = 2
-        self.max_depth_search = 5
+        self.max_depth_search = 6
         self.alpha = float('-inf')
         self.beta = float('inf')
     def get_move(self,move):
@@ -53,16 +53,16 @@ class StudentAI():
     def max_value(self, game,state, depth, alpha, beta):
         #Tawann add the if statement to check if we went over the depth here
         if depth <= 0:
-            return self.get_score(game, state), None
+            return self.get_score(game, self.color), None
         #If we did then return 0,None
         result = game.is_win(state)
         if result != 0:
             if result == state:
-                return 100, None
-            elif result ==-1:
-                return 100, None
+                return 1000, None
+            elif result == self.opponent[self.color]:
+                return -1000, None
             else:
-                return -100, None
+                return 0, None
         all_moves = game.get_all_possible_moves(state)
         if not all_moves or self.len_checker(all_moves):
             return self.get_score(game, state), None
@@ -97,12 +97,12 @@ class StudentAI():
             return self.get_score(game, state), None
         result = game.is_win(state)
         if result != 0:
-            if result == state:
-                return 100, None
+            if result == self.opponent[self.color]:
+                return 1000, None
             elif  result == -1:
-                return 100, None
+                return -1000, None
             else:
-                return -100, None
+                return 0, None
         all_moves = game.get_all_possible_moves(state)
         if not all_moves or self.len_checker(all_moves):
             return self.get_score(game, state), None
@@ -131,27 +131,39 @@ class StudentAI():
         score = 0
         board = game.board
         color_map = {1: "B", 2: "W"} 
-        my_color = color_map[state]
-        opp_color = color_map[self.opponent[state]]
-        center_row = range(2, len(board)-2)
-        center_col = range(2,len(board[0])-2)
+        my_color = color_map[self.color]
+        opp_color = color_map[self.opponent[self.color]]
+        
+        my_pieces = 0
+        opp_pieces = 0
         for i in range(len(board)):
             for j in range(len(board[i])):
                 piece = board[i][j]
                 if piece is None:
                     continue
                 if piece.color == my_color:
-                    score += 2
+                    score += 1
                     if piece.is_king:
-                        score += 4
-                    if i in center_row and j in center_col:
-                        score +=1
+                        score += 7
+                    else:
+                        score +=3
+                        if my_color =="B":
+                            score+= (self.row-1-i) *0.5
+                        else:
+                            score += i *0.5
+                    
+                    
                 elif piece.color == opp_color:
-                    score -= 2
+                    score -= 1
                     if piece.is_king:
-                        score -= 4
-                    if i in center_row and j in center_col:
-                        score -= 1
+                        score -= 7
+                    else:
+                        score +=3
+                        if my_color =="B":
+                            score-= (self.row-1-i) *0.5
+                        else:
+                            score -= i *0.5
+        score += (my_pieces - opp_pieces) *2
         return score
     def len_checker(self, iterablee):
         for x in iterablee:
