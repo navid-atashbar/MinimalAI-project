@@ -65,7 +65,7 @@ class StudentAI():
                 return -100, None
         all_moves = game.get_all_possible_moves(state)
         if not all_moves or self.len_checker(all_moves):
-            return -100, None
+            return self.get_score(game, state), None
 
         v = float('-inf')
         best_move = None
