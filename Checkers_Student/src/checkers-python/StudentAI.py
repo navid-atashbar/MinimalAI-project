@@ -52,7 +52,7 @@ class StudentAI():
         
     def max_value(self, game,state, depth, alpha, beta):
         #Tawann add the if statement to check if we went over the depth here
-        if depth == 0:
+        if depth <= 0:
             return self.get_score(game, state), None
         #If we did then return 0,None
         result = game.is_win(state)
@@ -64,7 +64,7 @@ class StudentAI():
             else:
                 return -100, None
         all_moves = game.get_all_possible_moves(state)
-        if not all_moves or all(len(m) == 0 for m in all_moves):
+        if not all_moves or self.len_checker(all_moves):
             return -100, None
 
         v = float('-inf')
@@ -93,7 +93,7 @@ class StudentAI():
     def min_value(self, game, state, depth, alpha, beta):
         #Tawann add the if statement to check if we went over the depth here
         #If we did then return 0,None
-        if depth == 0:
+        if depth <= 0:
             return self.get_score(game, state), None
         result = game.is_win(state)
         if result != 0:
@@ -104,7 +104,7 @@ class StudentAI():
             else:
                 return -100, None
         all_moves = game.get_all_possible_moves(state)
-        if not all_moves or all(len(m) == 0 for m in all_moves):
+        if not all_moves or self.len_checker(all_moves):
             return self.get_score(game, state), None
         v = float('inf')
         best_move = None        
@@ -153,3 +153,8 @@ class StudentAI():
                     if i in center_row and j in center_col:
                         score -= 1
         return score
+    def len_checker(self, iterablee):
+        for x in iterablee:
+            if len(x) != 0:
+                return False
+        return True
