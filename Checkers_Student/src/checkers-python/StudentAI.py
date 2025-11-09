@@ -20,12 +20,21 @@ class StudentAI():
         else:
             self.color = 1
         moves = self.board.get_all_possible_moves(self.color)
+        if not moves or all(len(m) == 0 for m in moves):
+            return Move([])
         move = self.minimax_search(self.board, self.color)
         '''index = randint(0,len(moves)-1)
         inner_index =  randint(0,len(moves[index])-1)
         move = moves[index][inner_index]'''
-        self.board.make_move(move,self.color)
-        return move
+        if move is not None:
+            self.board.make_move(move,self.color)
+            return move
+        else:
+            index = randint(0, len(moves)-1)
+            inner_index = randint(0, len(moves[index])-1)
+            move = moves[index][inner_index]
+            self.board.make_move(move, self.color)
+            return move 
 
     def minimax_search(self, game, state):
         #player = game.to_move(state)
@@ -35,16 +44,23 @@ class StudentAI():
     def max_value(self, game,state):
         result = game.is_win(state)
         if result != 0:
-            if result == -1 or result == state:
+            if result == state:
                 return 100, None
+            elif result ==-1:
+                return 0, None
             else:
                 return -100, None
+        all_moves = game.get_all_possible_moves(state)
+        if not all_moves or all(len(m) == 0 for m in all_moves):
+            return -100, None
+
         v = float('-inf')
         best_move = None
-        if state == 1:
-            opponent = 2
-        else:
-            opponent = 1
+        # if state == 1:
+        #     opponent = 2
+        # else:
+        #     opponent = 1
+        opponent = self.opponent[state]
         all_moves = game.get_all_possible_moves(state)
         for i in all_moves:
             for j in i:
@@ -61,17 +77,23 @@ class StudentAI():
     def min_value(self, game, state):
         result = game.is_win(state)
         if result != 0:
-            if result == -1 or result == state:
+            if result == state:
                 return 100, None
+            elif  result == -1:
+                return 0, None
             else:
                 return -100, None
+        all_moves = game.get_all_possible_moves(state)
+        if not all_moves or all(len(m) == 0 for m in all_moves):
+            return 100, None
         v = float('inf')
         best_move = None
-        if state == 1:
-            opponent = 2
-        else:
-            opponent = 1
-        all_moves = game.get_all_possible_moves(state)
+        # if state == 1:
+        #     opponent = 2
+        # else:
+        #     opponent = 1
+        
+        opponent = self.opponent[state]
         for i in all_moves:
             for j in i:
                 try:
