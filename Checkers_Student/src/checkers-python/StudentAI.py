@@ -23,7 +23,7 @@ class StudentAI():
         moves = self.board.get_all_possible_moves(self.color)
         if not moves or all(len(m) == 0 for m in moves):
             return Move([])
-        move = self.minimax_search(self.board, self.color)
+        move = self.minimax_search(self.board, self.color, self.max_depth_search)
         '''index = randint(0,len(moves)-1)
         inner_index =  randint(0,len(moves[index])-1)
         move = moves[index][inner_index]'''
@@ -37,13 +37,15 @@ class StudentAI():
             self.board.make_move(move, self.color)
             return move 
 
-    def minimax_search(self, game, state):
+    def minimax_search(self, game, state, depth):
         #player = game.to_move(state)
-        value, move = self.max_value(game,state)
+        value, move = self.max_value(game,state,depth)
         return move
         
-    def max_value(self, game,state):
+    def max_value(self, game,state, depth):
         #Tawann add the if statement to check if we went over the depth here
+        if depth == 0:
+            return 0, None
         #If we did then return 0,None
         result = game.is_win(state)
         if result != 0:
@@ -65,7 +67,7 @@ class StudentAI():
             for j in i:
                 try:
                     game.make_move(j,state)
-                    v2, _ = self.min_value(game, opponent)
+                    v2, _ = self.min_value(game, opponent, depth -1)
                     game.undo()
                     if v2 > v:
                         v, best_move = v2, j
@@ -73,9 +75,11 @@ class StudentAI():
                     continue
         return v, best_move
 
-    def min_value(self, game, state):
+    def min_value(self, game, state, depth):
         #Tawann add the if statement to check if we went over the depth here
         #If we did then return 0,None
+        if depth == 0:
+            return 0, None
         result = game.is_win(state)
         if result != 0:
             if result == state:
@@ -94,7 +98,7 @@ class StudentAI():
             for j in i:
                 try:
                     game.make_move(j,state)
-                    v2, _ = self.max_value(game, opponent)
+                    v2, _ = self.max_value(game, opponent, depth -1)
                     game.undo()
                     if v2 < v:
                         v, best_move = v2, j
