@@ -47,7 +47,7 @@ class StudentAI():
             if result == state:
                 return 100, None
             elif result ==-1:
-                return 0, None
+                return 100, None
             else:
                 return -100, None
         all_moves = game.get_all_possible_moves(state)
@@ -56,10 +56,6 @@ class StudentAI():
 
         v = float('-inf')
         best_move = None
-        # if state == 1:
-        #     opponent = 2
-        # else:
-        #     opponent = 1
         opponent = self.opponent[state]
         all_moves = game.get_all_possible_moves(state)
         for i in all_moves:
@@ -80,19 +76,14 @@ class StudentAI():
             if result == state:
                 return 100, None
             elif  result == -1:
-                return 0, None
+                return 100, None
             else:
                 return -100, None
         all_moves = game.get_all_possible_moves(state)
         if not all_moves or all(len(m) == 0 for m in all_moves):
             return 100, None
         v = float('inf')
-        best_move = None
-        # if state == 1:
-        #     opponent = 2
-        # else:
-        #     opponent = 1
-        
+        best_move = None        
         opponent = self.opponent[state]
         for i in all_moves:
             for j in i:
