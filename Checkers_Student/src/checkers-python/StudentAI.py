@@ -14,7 +14,7 @@ class StudentAI():
         self.color = ''
         self.opponent = {1:2,2:1}
         self.color = 2
-        self.max_depth_search = 8
+        self.max_depth_search = 5
         self.alpha = float('-inf')
         self.beta = float('inf')
     def get_move(self,move):
@@ -23,13 +23,14 @@ class StudentAI():
         else:
             self.color = 1
         moves = self.board.get_all_possible_moves(self.color)
+        legal_moves = [m for group in moves for m in group if m is not None]
         if not moves or all(len(m) == 0 for m in moves):
             return Move([])
         move = self.minimax_search(self.board, self.color, self.max_depth_search, self.alpha, self.beta)
         '''index = randint(0,len(moves)-1)
         inner_index =  randint(0,len(moves[index])-1)
         move = moves[index][inner_index]'''
-        if move is not None:
+        if move is not None and move in legal_moves:
             self.board.make_move(move,self.color)
             return move
         else:
@@ -47,7 +48,7 @@ class StudentAI():
     def max_value(self, game,state, depth, alpha, beta):
         #Tawann add the if statement to check if we went over the depth here
         if depth == 0:
-            return 0, None
+            return self.get_score(game, state), None
         #If we did then return 0,None
         result = game.is_win(state)
         if result != 0:
@@ -68,7 +69,10 @@ class StudentAI():
         for i in all_moves:
             for j in i:
                 try:
-                    game.make_move(j,state)
+                    try:
+                        game.make_move(j,state)
+                    except:
+                        continue
                     v2, _ = self.min_value(game, opponent, depth -1, alpha, beta)
                     game.undo()
                     if v2 > v:
@@ -85,7 +89,7 @@ class StudentAI():
         #Tawann add the if statement to check if we went over the depth here
         #If we did then return 0,None
         if depth == 0:
-            return 0, None
+            return self.get_score(game, state), None
         result = game.is_win(state)
         if result != 0:
             if result == state:
@@ -96,14 +100,17 @@ class StudentAI():
                 return -100, None
         all_moves = game.get_all_possible_moves(state)
         if not all_moves or all(len(m) == 0 for m in all_moves):
-            return 100, None
+            return self.get_score(game, state), None
         v = float('inf')
         best_move = None        
         opponent = self.opponent[state]
         for i in all_moves:
             for j in i:
                 try:
-                    game.make_move(j,state)
+                    try:
+                        game.make_move(j,state)
+                    except:
+                        continue
                     v2, _ = self.max_value(game, opponent, depth -1, alpha, beta)
                     game.undo()
                     if v2 < v:
@@ -117,6 +124,21 @@ class StudentAI():
         return v, best_move
     def get_score(self, game, state):
         score = 0
-        
-
-        return 
+        board = game.board
+        color_map = {1: "B", 2: "W"} 
+        my_color = color_map[state]
+        opp_color = color_map[self.opponent[state]]
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                piece = board[i][j]
+                if piece is None:
+                    continue
+                if piece.color == my_color:
+                    score += 1
+                    if piece.is_king:
+                        score += 1
+                elif piece.color == opp_color:
+                    score -= 1
+                    if piece.is_king:
+                        score -= 1
+        return score
