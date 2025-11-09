@@ -14,6 +14,7 @@ class StudentAI():
         self.color = ''
         self.opponent = {1:2,2:1}
         self.color = 2
+        self.max_depth_search = 5
     def get_move(self,move):
         if len(move) != 0:
             self.board.make_move(move,self.opponent[self.color])
@@ -42,6 +43,8 @@ class StudentAI():
         return move
         
     def max_value(self, game,state):
+        #Tawann add the if statement to check if we went over the depth here
+        #If we did then return 0,None
         result = game.is_win(state)
         if result != 0:
             if result == state:
@@ -71,6 +74,8 @@ class StudentAI():
         return v, best_move
 
     def min_value(self, game, state):
+        #Tawann add the if statement to check if we went over the depth here
+        #If we did then return 0,None
         result = game.is_win(state)
         if result != 0:
             if result == state:
