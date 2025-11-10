@@ -14,7 +14,7 @@ class StudentAI():
         self.color = ''
         self.opponent = {1:2,2:1}
         self.color = 2
-        self.max_depth_search = 6
+        self.max_depth_search = 5
         self.alpha = float('-inf')
         self.beta = float('inf')
     def get_move(self,move):
@@ -46,6 +46,7 @@ class StudentAI():
             return move 
 
     def minimax_search(self, game, state, depth, alpha, beta):
+        #used alpha beta and min max from slides
         #player = game.to_move(state)
         value, move = self.max_value(game,state, depth, alpha, beta)
         return move
@@ -128,6 +129,7 @@ class StudentAI():
                     continue
         return v, best_move
     def get_score(self, game, state):
+        # calculates score for huiristic
         score = 0
         board = game.board
         color_map = {1: "B", 2: "W"} 
