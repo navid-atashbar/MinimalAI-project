@@ -18,6 +18,7 @@ class StudentAI():
         self.alpha = float('-inf')
         self.beta = float('inf')
     def get_move(self,move):
+        #IMPLEMENT MONTE CARLO TREE SEARCH
         if len(move) != 0:
             self.board.make_move(move,self.opponent[self.color])
         else:
